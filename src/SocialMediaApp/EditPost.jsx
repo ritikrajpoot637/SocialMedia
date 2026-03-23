@@ -20,7 +20,7 @@ const EditPost = () => {
             e.preventDefault();
             if (title && content) {
                 dispatch(editPost({ id,title, content}));
-                navigate('/loginPost'); // Auto-redirect after adding
+                navigate('/loginList'); // Auto-redirect after adding
             }
         }
     
