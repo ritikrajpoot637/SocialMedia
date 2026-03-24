@@ -17,6 +17,7 @@ export const router=createBrowserRouter( [
   {
     path:'/postList', element:<PostList/>,
    
+   
 
   },
    { path:'/addPost',element:<AddPost/>},

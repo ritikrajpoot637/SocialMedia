@@ -1,9 +1,37 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React, { useActionState } from 'react'
+import { Link, useActionData } from 'react-router'
 import { Navigate, useNavigate } from 'react-router'
+import { useFormStatus } from "react-dom";
+import { useEffect } from 'react';
 
+const handle=async(prevdata,fromdata)=>{
+  //  let res= await fetch("url",{
+  //     method:post,
+  //     body:JSON.stringify('')
+  //   })
+  await new Promise(resolve=>setTimeout(resolve,3000))
+    let email=fromdata.get('email')
+    let password=fromdata.get('password')
+    
+    let data=JSON.parse(localStorage.getItem('data'));
+     
+      if(data.email==email&&data.password==password){
+        
+        return{success:"pass"}
+        
+      }
+      else{
+        return  {error:"user is not defined"}
+
+      }
+}
 const Login = () => {
     const navigate=useNavigate();
+    const [state,formAction]=useActionState(handle,{})
+    
+        useEffect(()=>{
+          if(state.success) navigate('/postList')
+        },[state,navigate])
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -13,7 +41,7 @@ const Login = () => {
             <div className="card-body p-4 p-sm-5">
               <h2 className="text-center fw-bold mb-4">Welcome Back</h2>
               
-              <form>
+              <form action={formAction}>
                 {/* Email Input */}
                 <div className="mb-3">
                   <label className="form-label fw-semibold">Email Address</label>
@@ -22,6 +50,7 @@ const Login = () => {
                     className="form-control py-2 rounded-3" 
                     placeholder="name@example.com" 
                     required 
+                    name='email'
                   />
                 </div>
 
@@ -29,13 +58,14 @@ const Login = () => {
                 <div className="mb-2">
                   <div className="d-flex justify-content-between">
                     <label className="form-label fw-semibold">Password</label>
-                    <a href="#" className="text-decoration-none small fw-bold">Forgot?</a>
+                    
                   </div>
                   <input 
                     type="password" 
                     className="form-control py-2 rounded-3" 
                     placeholder="••••••••" 
                     required 
+                    name='password'
                   />
                 </div>
 
@@ -47,12 +77,7 @@ const Login = () => {
                   </label>
                 </div>
 
-                {/* Login Button */}
-                <div className="d-grid">
-                  <button type="submit" onClick={()=>{navigate('/postList')}} className="btn btn-primary btn-lg fw-bold rounded-pill">
-                    Log In
-                  </button>
-                </div>
+              <SectionButton/>
 
                 {/* Link to Registration */}
                 <p className="text-center mt-4 text-muted small">
@@ -68,3 +93,13 @@ const Login = () => {
 }
 
 export default Login
+const SectionButton=()=>{
+  const {pending}=useFormStatus()
+  return(
+    <div className="d-grid">
+                  <button type="submit" disabled={pending} className="btn btn-primary btn-lg fw-bold rounded-pill">
+                    Sign Up
+                  </button>
+                </div>
+  )
+}
